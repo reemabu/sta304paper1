@@ -1,0 +1,894 @@
+---
+title: "Toronto Policing in Minority communities and Rate of Cases Cleared"
+author: "Reem Abughazaleh"
+Date: "Feburaruy 6th, 2022"
+output:
+  pdf_document: default
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+abstract: "First sentence (broad and motivtional). Second sentence (what i did " obtian and analyzed). Third sentence (findings) . Fourth sentence (why does this matter)."
+
+# Introduction
+
+first parapgrah is motivational and broad. 
+
+second is bout what was done and what was found 
+
+third is about implications
+
+fothe reminder of the paper is: Section \@ref(data). R Markdown automatically makes the sections lower case and adds a dash to spaces to generate labels, for instance, Section \@ref(first-discussion-point). 
+
+
+In recent years the public eye has been on the practices of local police departments. In particular the public has been critical of how police treat minority communities. The data used in this report is from the Toronto Police Service Annual Statistics Report (ASR), which provides a comprehensive overview of police related statistics including reported crimes (3). The ASR contains data about the number of charges laid, how many of those charges were cleared, what kind of crime was committed and which division the particular charges were reported. For a charge to be “cleared” it means that “An offence can be considered cleared when a charge is laid, recommended or the person(s) who committed the offence has been identified and no charge has been laid for some reason” (1). 
+It has been documented that there are higher crime rates in minority communities then majority white communities but is there a difference in the rate of which charges are cleared between minority and white communities (2)? I think there will be a relationship between which division, ie community, and the rate at which cases are cleared. 
+
+
+# Data
+
+paragrah or 2 about the data boradly.
+
+the show the data set using table.
+
+paragraph about table 
+
+make a graph 
+
+pargraph about the graph 
+
+## Data Collection Process
+
+The data in the ASR has been agguraged and reported by the Toronto Police Service. According to the Toronto Open portal “this data includes all crimes reported to the Toronto Police Service, including, but not limited to, those that may have been deemed unfounded after investigation, those that may have occurred outside the City of Toronto limits, or those that have no verified location(3).” 
+
+## Data Summary
+
+The data is of all reported offences from 2014-2019 and has been aggregated by year, category, subtype and geographic division. The data includes 2369 observations and 10 variables; id, index_, Reported Year, GeoDivision, Category, Subtype, Count_, CountCleared, ObjectId and geometry. 
+
+
+```{r include=FALSE}
+#install.packages("opendatatoronto")
+library(opendatatoronto)
+library(tidyverse)	
+library(dplyr)
+library(knitr)
+
+ 
+# get package
+package <- show_package("9d11c7aa-7613-4d3e-95f3-a02e2b1aa2d7")
+package
+ 
+# get all resources for this package
+resources <- list_package_resources("9d11c7aa-7613-4d3e-95f3-a02e2b1aa2d7")
+ 
+# identify datastore resources; by default, Toronto Open Data sets datastore resource format to CSV for non-geospatial and GeoJSON for geospatial resources
+datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
+ 
+# load the first datastore resource as a sample
+data <- filter(datastore_resources, row_number()==1) %>% get_resource()
+data
+
+
+data <- tibble(
+  ReportedYear = data$ReportedYear,
+  GeoDivision = data$GeoDivision,
+  Category = data$Category,
+  Subtype = data$Subtype,
+  Count_ = data$Count_,
+  CountCleared = data$CountCleared,
+  ObjectId = data$ObjectId,
+  geometry = data$geometry,
+  Index_ = data$Index_
+  )
+
+class(data)
+
+tibble(data)
+```
+
+```{r include=FALSE}
+# Data cleaning 
+cleaned_data <- 
+  data %>%
+  filter(GeoDivision != "NSA") %>%
+  filter(ReportedYear == "2020")%>%
+  select(ReportedYear, GeoDivision, Category, Subtype, Count_,CountCleared)
+
+# filter out entry with no location specified
+# Remove columns that are not needed
+
+```
+
+```{r echo=TRUE}
+
+#Gathering D11 Data
+D11CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D11") %>%
+  filter(Category == "Crimes Against Property")
+D11cat1total <-sum(D11CAT1DATA$Count_)
+
+D12CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D12") %>%
+  filter(Category == "Crimes Against Property")
+D12cat1total <-sum(D12CAT1DATA$Count_)
+
+D13CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D13") %>%
+  filter(Category == "Crimes Against Property")
+D13cat1total <-sum(D13CAT1DATA$Count_)
+
+D14CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D14") %>%
+  filter(Category == "Crimes Against Property")
+D14cat1total <-sum(D14CAT1DATA$Count_)
+
+D22CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D22") %>%
+  filter(Category == "Crimes Against Property")
+D22cat1total <-sum(D22CAT1DATA$Count_)
+
+D23CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D23") %>%
+  filter(Category == "Crimes Against Property")
+D23cat1total <-sum(D23CAT1DATA$Count_)
+
+D31CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D31") %>%
+  filter(Category == "Crimes Against Property")
+D31cat1total <-sum(D31CAT1DATA$Count_)
+
+D32CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D32") %>%
+  filter(Category == "Crimes Against Property")
+D32cat1total <-sum(D32CAT1DATA$Count_)
+
+D33CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D33") %>%
+  filter(Category == "Crimes Against Property")
+D33cat1total <-sum(D33CAT1DATA$Count_)
+
+D41CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D41") %>%
+  filter(Category == "Crimes Against Property")
+D41cat1total <-sum(D41CAT1DATA$Count_)
+
+D42CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D42") %>%
+  filter(Category == "Crimes Against Property")
+D42cat1total <-sum(D42CAT1DATA$Count_)
+
+D43CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D43") %>%
+  filter(Category == "Crimes Against Property")
+D43cat1total <-sum(D43CAT1DATA$Count_)
+
+D51CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D51") %>%
+  filter(Category == "Crimes Against Property")
+D51cat1total <-sum(D51CAT1DATA$Count_)
+
+D52CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D52") %>%
+  filter(Category == "Crimes Against Property")
+D52cat1total <-sum(D52CAT1DATA$Count_)
+
+D53CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D53") %>%
+  filter(Category == "Crimes Against Property")
+D53cat1total <-sum(D53CAT1DATA$Count_)
+
+D54D55CAT1DATA <- cleaned_data %>%
+  filter(GeoDivision == "D54/D55") %>%
+  filter(Category == "Crimes Against Property")
+D54D55cat1total <-sum(D54D55CAT1DATA$Count_)
+
+Cat1totals <- c(D11cat1total,D12cat1total, D13cat1total,D14cat1total, D22cat1total, D23cat1total, D31cat1total, D32cat1total,D33cat1total,D41cat1total,D42cat1total,D43cat1total,D51cat1total,D52cat1total,D53cat1total,D54D55cat1total)
+
+
+#Gathering D11 Data
+D11CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D11") %>%
+  filter(Category == "Crimes Against the Person")
+D11cat2total <-sum(D11CAT2DATA$Count_)
+
+D12CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D12") %>%
+  filter(Category == "Crimes Against the Person")
+D12cat2total <-sum(D12CAT2DATA$Count_)
+
+D13CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D13") %>%
+  filter(Category == "Crimes Against the Person")
+D13cat2total <-sum(D13CAT2DATA$Count_)
+
+D14CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D14") %>%
+  filter(Category == "Crimes Against the Person")
+D14cat2total <-sum(D14CAT2DATA$Count_)
+
+D22CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D22") %>%
+  filter(Category == "Crimes Against the Person")
+D22cat2total <-sum(D22CAT2DATA$Count_)
+
+D23CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D23") %>%
+  filter(Category == "Crimes Against the Person")
+D23cat2total <-sum(D23CAT2DATA$Count_)
+
+D31CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D31") %>%
+  filter(Category == "Crimes Against the Person")
+D31cat2total <-sum(D31CAT2DATA$Count_)
+
+D32CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D32") %>%
+  filter(Category == "Crimes Against the Person")
+D32cat2total <-sum(D32CAT2DATA$Count_)
+
+D33CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D33") %>%
+  filter(Category == "Crimes Against the Person")
+D33cat2total <-sum(D33CAT2DATA$Count_)
+
+D41CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D41") %>%
+  filter(Category == "Crimes Against the Person")
+D41cat2total <-sum(D41CAT2DATA$Count_)
+
+D42CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D42") %>%
+  filter(Category == "Crimes Against the Person")
+D42cat2total <-sum(D42CAT2DATA$Count_)
+
+D43CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D43") %>%
+  filter(Category == "Crimes Against the Person")
+D43cat2total <-sum(D43CAT2DATA$Count_)
+
+D51CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D51") %>%
+  filter(Category == "Crimes Against the Person")
+D51cat2total <-sum(D51CAT2DATA$Count_)
+
+D52CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D52") %>%
+  filter(Category == "Crimes Against the Person")
+D52cat2total <-sum(D52CAT2DATA$Count_)
+
+D53CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D53") %>%
+  filter(Category == "Crimes Against the Person")
+D53cat2total <-sum(D53CAT2DATA$Count_)
+
+D54D55CAT2DATA <- cleaned_data %>%
+  filter(GeoDivision == "D54/D55") %>%
+  filter(Category == "Crimes Against the Person")
+D54D55cat2total <-sum(D54D55CAT2DATA$Count_)
+
+Cat2totals <- c(D11cat2total,D12cat2total, D13cat2total,D14cat2total, D22cat2total, D23cat2total, D31cat2total, D32cat2total,D33cat2total,D41cat2total,D42cat2total,D43cat2total,D51cat2total,D52cat2total,D53cat2total,D54D55cat2total)
+
+
+#Gathering D11 Data
+D11CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D11") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D11cat3total <-sum(D11CAT3DATA$Count_)
+
+D12CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D12") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D12cat3total <-sum(D12CAT3DATA$Count_)
+
+D13CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D13") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D13cat3total <-sum(D13CAT3DATA$Count_)
+
+D14CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D14") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D14cat3total <-sum(D14CAT3DATA$Count_)
+
+D22CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D22") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D22cat3total <-sum(D22CAT3DATA$Count_)
+
+D23CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D23") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D23cat3total <-sum(D23CAT3DATA$Count_)
+
+D31CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D31") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D31cat3total <-sum(D31CAT3DATA$Count_)
+
+D32CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D32") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D32cat3total <-sum(D32CAT3DATA$Count_)
+
+D33CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D33") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D33cat3total <-sum(D33CAT3DATA$Count_)
+
+D41CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D41") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D41cat3total <-sum(D41CAT3DATA$Count_)
+
+D42CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D42") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D42cat3total <-sum(D42CAT3DATA$Count_)
+
+D43CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D43") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D43cat3total <-sum(D43CAT3DATA$Count_)
+
+D51CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D51") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D51cat3total <-sum(D51CAT3DATA$Count_)
+
+D52CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D52") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D52cat3total <-sum(D52CAT3DATA$Count_)
+
+D53CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D53") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D53cat3total <-sum(D53CAT3DATA$Count_)
+
+D54D55CAT3DATA <- cleaned_data %>%
+  filter(GeoDivision == "D54/D55") %>%
+  filter(Category == "Controlled Drugs and Substances Act")
+D54D55cat3total <-sum(D54D55CAT3DATA$Count_)
+
+Cat3totals <- c(D11cat3total,D12cat3total, D13cat3total,D14cat3total, D22cat3total, D23cat3total, D31cat3total, D32cat3total,D33cat3total,D41cat3total,D42cat3total,D43cat3total,D51cat3total,D52cat3total,D53cat3total,D54D55cat3total)
+
+
+
+
+#Gathering D11 Data
+D11CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D11") %>%
+  filter(Category == "Criminal Code Traffic ")
+D11cat4total <-sum(D11CAT4DATA$Count_)
+
+D12CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D12") %>%
+  filter(Category == "Criminal Code Traffic ")
+D12cat4total <-sum(D12CAT4DATA$Count_)
+
+D13CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D13") %>%
+  filter(Category == "Criminal Code Traffic ")
+D13cat4total <-sum(D13CAT4DATA$Count_)
+
+D14CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D14") %>%
+  filter(Category == "Criminal Code Traffic ")
+D14cat4total <-sum(D14CAT4DATA$Count_)
+
+D22CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D22") %>%
+  filter(Category == "Criminal Code Traffic ")
+D22cat4total <-sum(D22CAT4DATA$Count_)
+
+D23CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D23") %>%
+  filter(Category == "Criminal Code Traffic ")
+D23cat4total <-sum(D23CAT4DATA$Count_)
+
+D31CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D31") %>%
+  filter(Category == "Criminal Code Traffic ")
+D31cat4total <-sum(D31CAT4DATA$Count_)
+
+D32CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D32") %>%
+  filter(Category == "Criminal Code Traffic ")
+D32cat4total <-sum(D32CAT4DATA$Count_)
+
+D33CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D33") %>%
+  filter(Category == "Criminal Code Traffic ")
+D33cat4total <-sum(D33CAT4DATA$Count_)
+
+D41CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D41") %>%
+  filter(Category == "Criminal Code Traffic ")
+D41cat4total <-sum(D41CAT4DATA$Count_)
+
+D42CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D42") %>%
+  filter(Category == "Criminal Code Traffic ")
+D42cat4total <-sum(D42CAT4DATA$Count_)
+
+D43CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D43") %>%
+  filter(Category == "Criminal Code Traffic ")
+D43cat4total <-sum(D43CAT4DATA$Count_)
+
+D51CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D51") %>%
+  filter(Category == "Criminal Code Traffic ")
+D51cat4total <-sum(D51CAT4DATA$Count_)
+
+D52CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D52") %>%
+  filter(Category == "Criminal Code Traffic ")
+D52cat4total <-sum(D52CAT4DATA$Count_)
+
+D53CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D53") %>%
+  filter(Category == "Criminal Code Traffic ")
+D53cat4total <-sum(D53CAT4DATA$Count_)
+
+D54D55CAT4DATA <- cleaned_data %>%
+  filter(GeoDivision == "D54/D55") %>%
+  filter(Category == "Criminal Code Traffic ")
+D54D55cat4total <-sum(D54D55CAT4DATA$Count_)
+
+Cat4totals <- c(D11cat4total,D12cat4total, D13cat4total,D14cat4total, D22cat4total, D23cat4total, D31cat4total, D32cat4total,D33cat4total,D41cat4total,D42cat4total,D43cat4total,D51cat4total,D52cat4total,D53cat4total,D54D55cat4total)
+
+
+
+
+#Gathering D11 Data
+D11CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D11") %>%
+  filter(Category == "Other Criminal Code Violations")
+D11cat5total <-sum(D11CAT5DATA$Count_)
+
+D12CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D12") %>%
+  filter(Category == "Other Criminal Code Violations")
+D12cat5total <-sum(D12CAT5DATA$Count_)
+
+D13CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D13") %>%
+  filter(Category == "Other Criminal Code Violations")
+D13cat5total <-sum(D13CAT5DATA$Count_)
+
+D14CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D14") %>%
+  filter(Category == "Other Criminal Code Violations")
+D14cat5total <-sum(D14CAT5DATA$Count_)
+
+D22CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D22") %>%
+  filter(Category == "Other Criminal Code Violations")
+D22cat5total <-sum(D22CAT5DATA$Count_)
+
+D23CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D23") %>%
+  filter(Category == "Other Criminal Code Violations")
+D23cat5total <-sum(D23CAT5DATA$Count_)
+
+D31CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D31") %>%
+  filter(Category == "Other Criminal Code Violations")
+D31cat5total <-sum(D31CAT5DATA$Count_)
+
+D32CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D32") %>%
+  filter(Category == "Other Criminal Code Violations")
+D32cat5total <-sum(D32CAT5DATA$Count_)
+
+D33CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D33") %>%
+  filter(Category == "Other Criminal Code Violations")
+D33cat5total <-sum(D33CAT5DATA$Count_)
+
+D41CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D41") %>%
+  filter(Category == "Other Criminal Code Violations")
+D41cat5total <-sum(D41CAT5DATA$Count_)
+
+D42CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D42") %>%
+  filter(Category == "Other Criminal Code Violations")
+D42cat5total <-sum(D42CAT5DATA$Count_)
+
+D43CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D43") %>%
+  filter(Category == "Other Criminal Code Violations")
+D43cat5total <-sum(D43CAT5DATA$Count_)
+
+D51CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D51") %>%
+  filter(Category == "Other Criminal Code Violations")
+D51cat5total <-sum(D51CAT5DATA$Count_)
+
+D52CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D52") %>%
+  filter(Category == "Other Criminal Code Violations")
+D52cat5total <-sum(D52CAT5DATA$Count_)
+
+D53CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D53") %>%
+  filter(Category == "Other Criminal Code Violations")
+D53cat5total <-sum(D53CAT5DATA$Count_)
+
+D54D55CAT5DATA <- cleaned_data %>%
+  filter(GeoDivision == "D54/D55") %>%
+  filter(Category == "Other Criminal Code Violations")
+D54D55cat5total <-sum(D54D55CAT5DATA$Count_)
+
+Cat5totals <- c(D11cat5total,D12cat5total, D13cat5total,D14cat5total, D22cat5total, D23cat5total, D31cat5total, D32cat5total,D33cat5total,D41cat5total,D42cat5total,D43cat5total,D51cat5total,D52cat5total,D53cat5total,D54D55cat5total)
+
+
+
+
+#Gathering D11 Data
+D11CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D11") %>%
+  filter(Category == "Other Federal Statute Violations")
+D11cat6total <-sum(D11CAT6DATA$Count_)
+
+D12CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D12") %>%
+  filter(Category == "Other Federal Statute Violations")
+D12cat6total <-sum(D12CAT6DATA$Count_)
+
+D13CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D13") %>%
+  filter(Category == "Other Federal Statute Violations")
+D13cat6total <-sum(D13CAT6DATA$Count_)
+
+D14CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D14") %>%
+  filter(Category == "Other Federal Statute Violations")
+D14cat6total <-sum(D14CAT6DATA$Count_)
+
+D22CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D22") %>%
+  filter(Category == "Other Federal Statute Violations")
+D22cat6total <-sum(D22CAT6DATA$Count_)
+
+D23CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D23") %>%
+  filter(Category == "Other Federal Statute Violations")
+D23cat6total <-sum(D23CAT6DATA$Count_)
+
+D31CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D31") %>%
+  filter(Category == "Other Federal Statute Violations")
+D31cat6total <-sum(D31CAT6DATA$Count_)
+
+D32CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D32") %>%
+  filter(Category == "Other Federal Statute Violations")
+D32cat6total <-sum(D32CAT6DATA$Count_)
+
+D33CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D33") %>%
+  filter(Category == "Other Federal Statute Violations")
+D33cat6total <-sum(D33CAT6DATA$Count_)
+
+D41CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D41") %>%
+  filter(Category == "Other Federal Statute Violations")
+D41cat6total <-sum(D41CAT6DATA$Count_)
+
+D42CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D42") %>%
+  filter(Category == "Other Federal Statute Violations")
+D42cat6total <-sum(D42CAT6DATA$Count_)
+
+D43CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D43") %>%
+  filter(Category == "Other Federal Statute Violations")
+D43cat6total <-sum(D43CAT6DATA$Count_)
+
+D51CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D51") %>%
+  filter(Category == "Other Federal Statute Violations")
+D51cat6total <-sum(D51CAT6DATA$Count_)
+
+D52CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D52") %>%
+  filter(Category == "Other Federal Statute Violations")
+D52cat6total <-sum(D52CAT6DATA$Count_)
+
+D53CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D53") %>%
+  filter(Category == "Other Federal Statute Violations")
+D53cat6total <-sum(D53CAT6DATA$Count_)
+
+D54D55CAT6DATA <- cleaned_data %>%
+  filter(GeoDivision == "D54/D55") %>%
+  filter(Category == "Other Federal Statute Violations")
+D54D55cat6total <-sum(D54D55CAT6DATA$Count_)
+
+Cat6totals <- c(D11cat6total,D12cat6total, D13cat6total,D14cat6total, D22cat6total, D23cat6total, D31cat6total, D32cat6total,D33cat6total,D41cat6total,D42cat6total,D43cat6total,D51cat6total,D52cat6total,D53cat6total,D54D55cat6total)
+
+#create table
+
+Divisions <- c("D11","D12","D13","D14","D22","D23","D31","D32","D33","D41","D42","D43","D51","D52","D53","D54/D55")
+
+df2 <- data.frame(Divisions, Cat1totals, Cat2totals, Cat3totals, Cat4totals, Cat5totals, Cat6totals,stringsAsFactors=FALSE)
+
+
+df2 %>%
+  select(Divisions, Cat1totals, Cat2totals, Cat3totals, Cat4totals, Cat5totals, Cat6totals) %>%
+  kable(
+    caption = "Title",
+    col.names = c("Division","Crimes Against Property","Crimes Against the Person","Controlled Drugs and Substances Act","Criminal Code Traffic ","Other Criminal Code Violations","Other Federal Statute Violations"),
+    booktabs = TRUE,
+    linesep = "1"
+  )
+
+```
+
+
+
+``` {r}
+#cleaned_data <- cleaned_data %>%
+# mutate(RateCleared = ((CountCleared/Count_)*100))
+```
+
+
+```{r echo=TRUE}
+# Data Plotting
+
+#Gathering GeoDivision D11 Data
+D11DATA <- cleaned_data %>%
+  filter(GeoDivision == "D11")
+D11counttotal <-sum(D11DATA$Count_)
+D11countclearedtotal <-sum(D11DATA$CountCleared)
+
+#Gathering GeoDivision D12 Data
+D12DATA <- cleaned_data %>%
+  filter(GeoDivision == "D12")
+D12counttotal <-sum(D12DATA$Count_)
+D12countclearedtotal <-sum(D12DATA$CountCleared)
+
+#Gathering GeoDivision D13 Data
+D13DATA <- cleaned_data %>%
+  filter(GeoDivision == "D13")
+D13counttotal <-sum(D13DATA$Count_)
+D13countclearedtotal <-sum(D13DATA$CountCleared)
+
+#Gathering GeoDivision D14 Data
+D14DATA <- cleaned_data %>%
+  filter(GeoDivision == "D14")
+D14counttotal <-sum(D14DATA$Count_)
+D14countclearedtotal <-sum(D14DATA$CountCleared)
+
+#Gathering GeoDivision D22 Data
+D22DATA <- cleaned_data %>%
+  filter(GeoDivision == "D22")
+D22counttotal <-sum(D22DATA$Count_)
+D22countclearedtotal <-sum(D22DATA$CountCleared)
+
+#Gathering GeoDivision D23 Data
+D23DATA <- cleaned_data %>%
+  filter(GeoDivision == "D23")
+D23counttotal <-sum(D23DATA$Count_)
+D23countclearedtotal <-sum(D23DATA$CountCleared)
+
+#Gathering GeoDivision D31 Data
+D31DATA <- cleaned_data %>%
+  filter(GeoDivision == "D31")
+D31counttotal <-sum(D31DATA$Count_)
+D31countclearedtotal <-sum(D31DATA$CountCleared)
+
+#Gathering GeoDivision D32 Data
+D32DATA <- cleaned_data %>%
+  filter(GeoDivision == "D32")
+D32counttotal <-sum(D32DATA$Count_)
+D32countclearedtotal <-sum(D32DATA$CountCleared)
+
+#Gathering GeoDivision D33 Data
+D33DATA <- cleaned_data %>%
+  filter(GeoDivision == "D33")
+D33counttotal <-sum(D33DATA$Count_)
+D33countclearedtotal <-sum(D33DATA$CountCleared)
+
+#Gathering GeoDivision D41 Data
+D41DATA <- cleaned_data %>%
+  filter(GeoDivision == "D41")
+D41counttotal <-sum(D41DATA$Count_)
+D41countclearedtotal <-sum(D41DATA$CountCleared)
+
+#Gathering GeoDivision D42 Data
+D42DATA <- cleaned_data %>%
+  filter(GeoDivision == "D42")
+D42counttotal <-sum(D42DATA$Count_)
+D42countclearedtotal <-sum(D42DATA$CountCleared)
+
+#Gathering GeoDivision D43 Data
+D43DATA <- cleaned_data %>%
+  filter(GeoDivision == "D43")
+D43counttotal <-sum(D43DATA$Count_)
+D43countclearedtotal <-sum(D43DATA$CountCleared)
+
+#Gathering GeoDivision D51 Data
+D51DATA <- cleaned_data %>%
+  filter(GeoDivision == "D51")
+D51counttotal <-sum(D51DATA$Count_)
+D51countclearedtotal <-sum(D51DATA$CountCleared)
+
+#Gathering GeoDivision D52 Data
+D52DATA <- cleaned_data %>%
+  filter(GeoDivision == "D52")
+D52counttotal <-sum(D52DATA$Count_)
+D52countclearedtotal <-sum(D52DATA$CountCleared)
+
+#Gathering GeoDivision D53 Data
+D53DATA <- cleaned_data %>%
+  filter(GeoDivision == "D53")
+D53counttotal <-sum(D53DATA$Count_)
+D53countclearedtotal <-sum(D53DATA$CountCleared)
+
+#Gathering GeoDivision D54/D55 Data
+D54D55DATA <- cleaned_data %>%
+  filter(GeoDivision == "D54/D55")
+D54D55counttotal <-sum(D54D55DATA$Count_)
+D54D55countclearedtotal <-sum(D54D55DATA$CountCleared)
+
+
+Divisions <- c("D11","D12","D13","D14","D22","D23","D31","D32","D33","D41","D42","D43","D51","D52","D53","D54/D55")
+
+totalcounts <- c(D11counttotal,D12counttotal, D13counttotal,D14counttotal, D22counttotal,D23counttotal,D31counttotal,D32counttotal,D33counttotal,D41counttotal,D42counttotal,D43counttotal,D51counttotal,D52counttotal,D53counttotal,D54D55counttotal)
+
+totalcountscleared <- c(D11countclearedtotal,D12countclearedtotal, D13countclearedtotal,D14countclearedtotal, D22countclearedtotal,D23countclearedtotal,D31countclearedtotal,D32countclearedtotal,D33countclearedtotal,D41countclearedtotal,D42countclearedtotal,D43countclearedtotal,D51countclearedtotal,D52countclearedtotal,D53countclearedtotal,D54D55countclearedtotal)
+
+df1 <- data.frame(Divisions, totalcounts, totalcountscleared,stringsAsFactors=FALSE)
+
+
+df1 <- df1 %>%
+  mutate(RateCleared = ((totalcountscleared/totalcounts)*100))
+
+#DivisionData<- data.frame(t(df1[-1]))
+#colnames(DivisionData) <- df1[, 1]
+
+```
+
+```{r echo=TRUE}
+#Trend of Count of Homicide by Year
+df1 %>% ggplot(mapping = aes(x= Divisions, y= RateCleared)) +
+  geom_point()
+```
+
+
+For my analysis I decided to sample just the data from the calendar year 2019. Additionally, some of the observations had not specified, “NSA,” reported as their GeoDivision so I filtered those observations out of the data set. The variables of interest were kept in the data set while; id, index_,ObjectId and geometry were filtered out. This left us with 317 observations and 6 variables.
+The Count_ variable is the number of cases for a specific category, subcategory and division and is a numerical variable. The CountCleared is the number of cases that were cleared from the Count_  variable and is also a numerical variable. The GeoDivision variable is a categorical variable specifying the police division the charge was reported. The category variable is a categorical variable specifying the categories of crime reported. There are 5 categories, “Crimes Against Property," “Crimes Against the Person,” Controlled Drugs and Substances Act," "Criminal Code Traffic," “Other Criminal Code Violations," and "Other Federal Statute Violations." Subtype is also a categorical variable specifying the sub-category of crime reported. 
+ 
+
+```{r include=FALSE}
+
+#Calculating total cases of each category
+
+#total "Crimes Against Property"
+#Total1 <- with(cleaned_data, sum(Count_[Category == "Crimes Against Property",GeoDivision == "D11"]))
+
+#Total "Controlled Drugs and Substances Act"
+#Total2 <- with(mydata, sum(Count_[Category == "Controlled Drugs and Substances Act"]))
+#total "Crimes Against the Person"
+#Total3 <- with(mydata, sum(Count_[Category == "Crimes Against the Person"]))
+#total "Criminal Code Traffic"
+#Total4 <- with(mydata, sum(Count_[Category == "Criminal Code Traffic "]))
+#total "Other Criminal Code Violations"
+#Total5 <- with(mydata, sum(Count_[Category == "Other Criminal Code Violations"]))
+#total "Other Federal Statute Violations"
+#Total6 <- with(mydata, sum(Count_[Category == "Other Federal Statute Violations"]))
+
+#Calculating total cases cleared of each category
+
+#Total cleared "Crimes Against Property"
+#TotalCleared1 <- with(mydata, sum(CountCleared[Category == "Crimes Against Property"]))
+#Total cleared"Controlled Drugs and Substances Act"
+#TotalCleared2 <- with(mydata, sum(CountCleared[Category == "Controlled Drugs and Substances Act"]))
+#Total cleared "Crimes Against the Person"
+#TotalCleared3 <- with(mydata, sum(CountCleared[Category == "Crimes Against the Person"]))
+#Total cleared "Criminal Code Traffic"
+#TotalCleared4 <- with(mydata, sum(CountCleared[Category == "Criminal Code Traffic "]))
+#Total cleared "Other Criminal Code Violations"
+#TotalCleared5 <- with(mydata, sum(CountCleared[Category == "Other Criminal Code Violations"]))
+#Total cleared "Other Federal Statute Violations"
+#TotalCleared6 <- with(mydata, sum(CountCleared[Category == "Other Federal Statute Violations"]))
+
+#calculating percentage of cases cleared for each category
+#percentcleared1 <-(TotalCleared1/Total1)*100
+#percentcleared2 <-(TotalCleared2/Total2)*100
+#percentcleared3 <-(TotalCleared3/Total3)*100
+#percentcleared4 <-(TotalCleared4/Total4)*100
+#percentcleared5 <-(TotalCleared5/Total5)*100
+#percentcleared6 <-(TotalCleared6/Total6)*100
+#all <- c(percentcleared1,percentcleared2,percentcleared3,percentcleared4,percentcleared5,percentcleared6)
+
+#calculating percentage of cases cleared overall
+#counttotal <- sum(mydata$Count_)
+#clearedtotal <- sum(mydata$CountCleared)
+#percentcleared <- (clearedtotal/counttotal)*100
+```
+
+
+
+
+In Table 1 shown below it displays the total number of cases reported in each category across all divisions. 
+
+| $Category$ |   $Count$ |
+|--------------- | --------|
+| Crimes Against Property  |   93771 |
+| Controlled Drugs and Substances Act |   1609 |
+| Crimes Against the Person |   28270 |
+| Criminal Code Traffic|   1703 |
+| Other Criminal Code Violations |   16415 |
+| Other Federal Statute Violations |  213 |
+| $Table 1$
+
+
+In Table 2 shown below it displays the total number of cases that were cleared in each category across all divisions. 
+
+
+| $Category$ |   $Cleared$ |
+|--------------- | --------|
+| Crimes Against Property  |   21999 |
+| Controlled Drugs and Substances Act |   1499 |
+| Crimes Against the Person |   16828 |
+| Criminal Code Traffic|   1616 |
+| Other Criminal Code Violations |   14273 |
+| Other Federal Statute Violations |   181 |
+
+
+```{r echo=TRUE}
+
+#barplot(all,xlab = "Categories", ylab = "Percentage" )
+
+```
+
+The plot shows the percentage of cases that were cleared for each category Left to right the Categories are; Crimes Against Property, Controlled Drugs and Substances Act, Crimes Against the Person, Criminal Code Traffic, Other Criminal Code Violations and Other Federal Statute Violations.
+
+All analysis for this report was programmed using `R version 4.1.1`.
+
+
+
+# Methods
+
+A multiple linear regression model will be used to determine the relationship between the dependent variable, which in this case is the Count_ variable and the other variables of interest. The multiple linear regression model is $y=\beta_0 + \beta_1x_1 + ...+ \beta_nx_n + \epsilon$. Where $\beta_0$ represents the y-intercept, $\beta_1$ is the regression coefficient for the first independent variable in the model, $x_1$.$\beta_n$ in the regression coefficient for the $nth$ independent variable in the model, $x_n$. $\epsilon$ is the model error, it accounts for the variation there is in our estimate of y.The assumptions of the a multiple linear regression model are homoscedasticity, Normality, Linearity and Independence of observations. 
+
+Model selection will be done using Akaike information criterion (AIC) and Bayesian Information Criterion (BIC). AIC model selection attempts to fit a model with the least about of independent variables but also explains the variations in the model. BIC is similar to AIC but it penalizes a model for complexity.  
+
+# Results 
+
+
+
+The independent variables that will be used in the final model are Count_, which is the number of cases and Category, which is the category of crime reported. The AIC model selection process detemined that Count_, GeoDivision, Category and SubType should all be included in the final model. The BIC model selection Count_, Category and SubType should be included in the final model. The AIC model selection did not actually eliminate any variables from the model and over fear of over-fitting it was decided to use the BIC model.  It should be noted that when looking at the raw data the majority of outputs in the SubType section is listed as "other." As this is not very informative to the model and may even bias the model it was decided to exclude the SubType variable from the model. Relating this to the original research question, "is there a difference in the rate of which charges are cleared between minority and white communities," since GeoDivsion is not included in the final model we can not may any assumption or predictions about the matter.   
+
+# Conclusions
+
+There have been no conclusive results found in regards to the rate at which cases are cleared and types of communities. According to the model the variable that has the most effect on wither a case is cleared in the type of category of crime that was committed. 
+
+## Weaknesses
+
+In future analysis I would recommend the implementation of other model selection techniques. I would also recommend sampling a larger data set to build a model with. Additionally, a reorganization of the data would be advised as the break down of the observations were misleading and distracting. 
+
+## Next Steps
+
+Looking forward it would be advised for the data collectors to include data about race of of the parties affected and to make that information public. Additionally, the SubType variable would be more useful to analysis if the majority of outputs were not "other." Another interesting piece of information to include in analysis would the race of the officer involved in reporting the crime. 
+
+## Discussion
+
+While it has been well know that there are disparities in how police enforcement try communities of color, no conclusive results can be made from this study. More research and better data collection on the Toronto Police Services part needs to be implemented in or to get a better understanding of the internal biases of the system.  
+
+\newpage
+
+# Bibliography
+
+1. Toronto Police Service, Annual Statistical Report Open Data Documentation (2020). Toronto, ON.
+
+2. Lam, R. (2021, January 29). Ten neighbourhoods in Toronto with the highest total crime ... Retrieved October 25, 2021, from [https://www.tellingstorieswithdata.com/inputs/pdfs/Mandatory_minimums-Rachel_Lam.pdf]
+
+3. Police annual statistical report - reported crimes. CKAN. (n.d.). Retrieved October 25, 2021, from https://ckan0.cf.opendata.inter.prod-toronto.ca/gl/dataset/police-annual-statistical-report-reported-crimes. 

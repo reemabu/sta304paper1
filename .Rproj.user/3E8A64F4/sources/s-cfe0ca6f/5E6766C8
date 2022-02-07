@@ -1,0 +1,25 @@
+{
+    "id": "5E6766C8",
+    "path": "~/STA304P1/outputs/Paper1.Rmd",
+    "project_path": "outputs/Paper1.Rmd",
+    "type": "r_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": true,
+    "created": 1644188605519.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "cursorPosition": "5,42",
+        "scrollLine": "0",
+        "last_setup_crc32": "cfe0ca6f8a8c9b4a"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1644191823,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1644193028529,
+    "read_only": false,
+    "read_only_alternatives": []
+}
